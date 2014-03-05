@@ -1,4 +1,4 @@
-package guestbook;
+package com.smp.guestbook;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;

@@ -11,17 +11,9 @@
 <%@ page import="com.google.appengine.api.datastore.FetchOptions"%>
 <%@ page import="com.google.appengine.api.datastore.Key"%>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory"%>
+<%@ page import="com.smp.guestbook.SessionHelper"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<%!private void newSessionForUser(String userName, HttpServletRequest request) {
-		HttpSession currentSession = request.getSession();
-		String currentUser = (String) currentSession.getAttribute("user");
-		if (currentUser == null || !currentUser.equals(userName)) {
-			currentSession.invalidate();
-			currentSession = request.getSession();
-		}
-		currentSession.setAttribute("user", userName);
-	}%>
 <html>
 
 <body>
@@ -36,7 +28,7 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			pageContext.setAttribute("user", user);
-			newSessionForUser(user.getNickname(), request);
+			SessionHelper.newSessionForUser(user.getNickname(), request);
 	%>
 	<p>
 		Hello, ${fn:escapeXml(user.nickname)}! (You can <a
@@ -52,7 +44,7 @@
 	</form>
 	<%
 		} else {
-			newSessionForUser(null, request);
+			SessionHelper.newSessionForUser(null, request);
 	%>
 	<p>
 		Hello! <a

@@ -1,4 +1,4 @@
-package guestbook;
+package com.smp.guestbook;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Persistent;
