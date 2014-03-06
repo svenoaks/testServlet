@@ -7,13 +7,12 @@ public class BlobHelper
 {
 	public static boolean doesBlobExist(String key, BlobstoreService blobstoreService)
 	{
-		boolean blobExists = true;
 		try {
 			blobstoreService.fetchData(new BlobKey(key), 0L, 10L);
 		} catch (IllegalArgumentException e) {
-			blobExists = false;
+			return false;
 		}
 		
-		return blobExists;
+		return true;
 	}
 }
