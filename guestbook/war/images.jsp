@@ -32,9 +32,17 @@
 		System.out.println(guestbookName);
 		String currentUser = SessionHelper
 				.getCurrentUserFromSession(request);
+		pageContext.setAttribute("guestbookName", guestbookName);
 		pageContext.setAttribute("currentUser", currentUser);
 		if (currentUser != null && guestbookName != null) {
 	%>
+	<form action="/guestbook.jsp" method="get">
+		<div>
+			<input type="submit" value="Back to GuestBook" />
+		</div>
+		<input type="hidden" name="guestbookName"
+			value="${fn:escapeXml(guestbookName)}" />
+	</form>		
 	<p>Hello, ${fn:escapeXml(currentUser)}! Here are your super secret
 		images.</p>
 	<%
@@ -50,7 +58,8 @@
 				Query.SortDirection.ASCENDING);
 		List<Entity> imageBlobKeys = datastore.prepare(query).asList(
 				FetchOptions.Builder.withDefaults());
-		if (imageBlobKeys.isEmpty()) {
+		
+		 if (imageBlobKeys.isEmpty()) {
 	%>
 	<p>You have no images.</p>
 	<%
@@ -86,7 +95,8 @@
 			</tr>
 			</table>
 		<%} %>
-	 <form action="<%= blobstoreService.createUploadUrl("/submit") %>" method="post" enctype="multipart/form-data">
+	 <form action="<%= blobstoreService.createUploadUrl("/submit?guestbookName=" + guestbookName) %>" 
+	 		method="post" enctype="multipart/form-data">
         <input type="file" name="myFile">
         <input type="submit" value="Submit this Image">
     </form>

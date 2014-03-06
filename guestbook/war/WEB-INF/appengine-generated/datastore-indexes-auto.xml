@@ -1,14 +1,9 @@
-<!-- Indices written at Thu, 6 Mar 2014 12:38:47 EST -->
+<!-- Indices written at Thu, 6 Mar 2014 12:50:56 EST -->
 
 <datastore-indexes>
 
-    <!-- Used 2 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="Greeting" ancestor="true" source="auto">
-        <property name="date" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 30 times in query history -->
-    <datastore-index kind="ImageBlobKey" ancestor="true" source="auto">
         <property name="date" direction="desc"/>
     </datastore-index>
 

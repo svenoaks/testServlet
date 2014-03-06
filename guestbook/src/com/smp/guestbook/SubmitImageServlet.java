@@ -32,7 +32,7 @@ public class SubmitImageServlet extends HttpServlet
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException
 	{
-		String guestbookName = "LolBook";//request.getParameter("guestbookName");
+		String guestbookName = request.getParameter("guestbookName");
 		System.out.println(guestbookName);
 		String currentUser = SessionHelper
 				.getCurrentUserFromSession(request);
