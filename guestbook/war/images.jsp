@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page import="com.smp.guestbook.SessionHelper"%>
-<%@ page import="com.smp.guestbook.BlobHelper"%>
 <%@ page
 	import="com.google.appengine.api.blobstore.BlobstoreServiceFactory"%>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService"%>
@@ -48,7 +47,7 @@
 		Key userKey = guestbookKey.getChild("User", currentUser);
 
 		Query query = new Query("ImageBlobKey", userKey).addSort("date",
-				Query.SortDirection.DESCENDING);
+				Query.SortDirection.ASCENDING);
 		List<Entity> imageBlobKeys = datastore.prepare(query).asList(
 				FetchOptions.Builder.withDefaults());
 		if (imageBlobKeys.isEmpty()) {
@@ -56,7 +55,7 @@
 	<p>You have no images.</p>
 	<%
 		} else { %>
-			<table style="width:300px">
+			<table style="width:300px; margin:20px;">
 			<tr>
 		<%
 			int rowLength = 0;
@@ -89,7 +88,7 @@
 		<%} %>
 	 <form action="<%= blobstoreService.createUploadUrl("/submit") %>" method="post" enctype="multipart/form-data">
         <input type="file" name="myFile">
-        <input type="submit" value="Submit new Image">
+        <input type="submit" value="Submit this Image">
     </form>
 </body>
 </html>
