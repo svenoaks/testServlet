@@ -15,7 +15,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <html>
-
 <body>
 
 	<%
@@ -26,6 +25,7 @@
 		pageContext.setAttribute("guestbookName", guestbookName);
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
+		System.out.println(guestbookName);
 		if (user != null) {
 			pageContext.setAttribute("user", user);
 			SessionHelper.newSessionForUser(user.getNickname(), request);

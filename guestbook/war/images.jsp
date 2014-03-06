@@ -30,16 +30,18 @@
 <body>
 	<%
 		String guestbookName = request.getParameter("guestbookName");
+		System.out.println(guestbookName);
 		String currentUser = SessionHelper
 				.getCurrentUserFromSession(request);
 		pageContext.setAttribute("currentUser", currentUser);
-		if (currentUser != null) {
+		if (currentUser != null && guestbookName != null) {
 	%>
 	<p>Hello, ${fn:escapeXml(currentUser)}! Here are your super secret
 		images.</p>
 	<%
 		} else {
 			response.sendRedirect("guestbook.jsp");
+			return;
 		}
 
 		Key guestbookKey = KeyFactory.createKey("Guestbook", guestbookName);
@@ -48,33 +50,46 @@
 		Query query = new Query("ImageBlobKey", userKey).addSort("date",
 				Query.SortDirection.DESCENDING);
 		List<Entity> imageBlobKeys = datastore.prepare(query).asList(
-				FetchOptions.Builder.withLimit(10));
+				FetchOptions.Builder.withDefaults());
 		if (imageBlobKeys.isEmpty()) {
 	%>
 	<p>You have no images.</p>
 	<%
-		} else {
-	
-		for (Entity imageBlobKey : imageBlobKeys)
-		{
-			BlobKey theKey = (BlobKey) imageBlobKey.getProperty("BlobKey");
-		
-			ServingUrlOptions urlOptions = ServingUrlOptions.Builder
-				.withBlobKey(theKey);
-	%><div>
-		<img src="<%=imagesService.getServingUrl(urlOptions)%>" height="100"
-			width="100" />
-	</div>
-	<%
-			}
-		}
-	%>
+		} else { %>
+			<table style="width:300px">
+			<tr>
+		<%
+			int rowLength = 0;
+			for (Entity imageBlobKey : imageBlobKeys) {
+				BlobKey theKey = (BlobKey) imageBlobKey
+						.getProperty("BlobKey");
 
-	<form action="<%=blobstoreService.createUploadUrl("/submit")%>"
-		method="post" enctype="multipart/form-data">
-		<input type="file" name="<%=currentUser%>"> <input
-			type="submit" value="Submit this Image"> <input type="hidden"
-			name="guestbookName" value="${fn:escapeXml(guestbookName)}" />
-	</form>
+				ServingUrlOptions urlOptions = ServingUrlOptions.Builder
+						.withBlobKey(theKey);
+
+				try {
+					String servingUrl = imagesService.getServingUrl(urlOptions);
+					if (rowLength % 5 == 0)
+					{
+						%>
+						</tr>
+						<td>
+					<%}
+					 ++rowLength;%>
+				
+		<td> <a href="<%=servingUrl%>"> <img style="max-width:150px; max-height:150px" src="<%=servingUrl%>" /> </a> </td>	
+	
+	<%
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				}
+			}%>
+			</tr>
+			</table>
+		<%} %>
+	 <form action="<%= blobstoreService.createUploadUrl("/submit") %>" method="post" enctype="multipart/form-data">
+        <input type="file" name="myFile">
+        <input type="submit" value="Submit new Image">
+    </form>
 </body>
 </html>
